@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
+import math
 
 def plot_rgb(image):
     # RGB
@@ -27,10 +28,37 @@ def plot_rgb(image):
     plt.subplot(211), plt.bar(x, hist[0].flatten())
     plt.subplot(212), plt.bar(x, hist[1].flatten())
     plt.show()
+
+def get_entropy(image):
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    tmp = []
+    for i in range(256):
+        tmp.append(0)
+    val = 0
+    k = 0
+    res = 0
+    image = np.array(image)
+    for i in range(len(image)):
+        for j in range(len(image[i])):
+            val = image[i][j]
+            tmp[val] = float(tmp[val] + 1)
+            k = float(k + 1)
+    for i in range(len(tmp)):
+        tmp[i] = float(tmp[i] / k)
+    for i in range(len(tmp)):
+        if tmp[i] == 0:
+            res = res
+        else:
+            res = float(res - tmp[i] * (math.log(tmp[i]) / math.log(2.0)))
+    return res
+
+def get_entropy_hist(image):
+    imagegray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    histgray = cv2.calcHist([imagegray], [0], None, [255], [0, 255])
+    
+
 if __name__ == '__main__':
 
-    vec = np.random.uniform(-1,1,size=(10)) #changed the size part
-    print vec
-    plt.bar(range(len(vec)), vec, linewidth=1)
-    plt.show()
-    print 'done'
+    image = cv2.imread("images\\lena.jpg")
+    entropy = get_entropy(image)
+    print entropy

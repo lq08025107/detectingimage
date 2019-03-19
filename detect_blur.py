@@ -69,12 +69,12 @@ def detect_light_dark(image):
 
 def detect_color_cast(image):
 	hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-	hist = cv2.calcHist([hsv], [0], None, [180], [0, 180])
+	hist = cv2.calcHist([hsv], [0], None,[16],[0, 180])
 	hist = hist.flatten()
 	ratio = max(hist) / sum(hist)
 	print ratio
 	text = "Normal"
-	if ratio > 0.2:
+	if ratio > 0.8:
 		text = "Color Cast"
 
 	cv2.putText(image, "{}:{:.2f}".format(text, ratio), (10, 30),
@@ -86,7 +86,7 @@ def detect_color_cast(image):
 
 
 if __name__ == "__main__":
-	image = cv2.imread("images\\yellow2.jpg")
+	image = cv2.imread("images\\pianse3.jpg")
 	#detect_blur(image)
 	#detect_light_dark(image)
 	detect_color_cast(image)
