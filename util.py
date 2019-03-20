@@ -54,11 +54,34 @@ def get_entropy(image):
 
 def get_entropy_hist(image):
     imagegray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    histgray = cv2.calcHist([imagegray], [0], None, [255], [0, 255])
-    
+
+    histgray = cv2.calcHist([imagegray], [0], None, [255], [0, 255]).flatten()
+    tmp = []
+    sum = 0
+    result = 0
+    for i in range(26):
+        tmp.append(0)
+    for i in range(25):
+        for j in range(10):
+            sum += histgray[i*10 + j]
+        tmp[i] = sum / (imagegray.shape[0] * imagegray.shape[1])
+        sum = 0
+    for i in range(250, 255):
+        sum += histgray[i]
+    tmp[25] = sum / (imagegray.shape[0] * imagegray.shape[1])
+
+    for i in range(26):
+        if tmp[i] == 0:
+            result= result
+        else:
+            result = result - tmp[i] * (math.log(tmp[i]) / math.log(2.0))
+            #/ math.log(2.0)
+    return result
+
+
 
 if __name__ == '__main__':
 
-    image = cv2.imread("images\\lena.jpg")
-    entropy = get_entropy(image)
+    image = cv2.imread("images\\nosignal.png")
+    entropy = get_entropy_hist(image)
     print entropy
