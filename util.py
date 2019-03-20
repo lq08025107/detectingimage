@@ -79,9 +79,28 @@ def get_entropy_hist(image):
     return result
 
 
-
+# imagegray = image
+# core = np.ones((5, 5), np.float) / 25
+# print core
+# core_0 = np.array([[-1, -1, -1], [0, 0, 0], [1, 1, 1]], np.float32)
+# core_45 = np.array([[0, -1, -1], [1, 0, -1], [1, 1, 0]], np.float32)
+# core_90 = np.array([[1, 0, -1], [1, 0, -1], [1, 0, -1]], np.float32)
+# core_135 = np.array([[1, 1, 0], [1, 0, -1], [0, -1, -1]], np.float32)
+#
+# res = cv2.filter2D(imagegray, -1, core)
+# res_0 = cv2.filter2D(imagegray, -1, core_0)
+# res_45 = cv2.filter2D(imagegray, -1, core_45)
+# res_90 = cv2.filter2D(imagegray, -1, core_90)
+# res_135 = cv2.filter2D(imagegray, -1, core_135)
+#
+# cv2.imshow("conv", res)
+# cv2.imshow("0 conv", res_0)
+# cv2.imshow("45 conv", res_45)
+# cv2.imshow("90 conv", res_90)
+# cv2.imshow("135 conv", res_135)
 if __name__ == '__main__':
 
     image = cv2.imread("images\\nosignal.png")
     entropy = get_entropy_hist(image)
     print entropy
+

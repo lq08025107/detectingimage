@@ -111,34 +111,28 @@ def detect_no_signal(image):
 	key = cv2.waitKey(0)
 
 def detect_snow(image):
-	#imagegray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-	imagegray = image
-	core = np.ones((5, 5), np.float)/25
-	print core
-	core_0 = np.array([[-1,-1,-1],[0,0,0],[1,1,1]], np.float32)
-	core_45 = np.array([[0, -1, -1], [1, 0, -1], [1, 1, 0]], np.float32)
-	core_90 = np.array([[1,0,-1],[1,0,-1],[1,0,-1]], np.float32)
-	core_135 = np.array([[1,1,0],[1,0,-1],[0,-1,-1]], np.float32)
+	imagegray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+	imagemedian = cv2.medianBlur(imagegray, 3)
+	#imagemebil = cv2.bilateralFilter(imagegray, 9,75,75)
+	#cv2.imshow("bil image", imagemebil)
+	noise = imagegray - imagemedian
+	sum = 0
+	noise = noise.flatten()
+	for i in range(len(noise)):
+		if noise[i] > 10:
+			sum += 1
 
+	ratio = sum*1.0 / (image.shape[0] * image.shape[1])
+	text = "Normal"
+	if ratio > 0.7:
+		text = "Snow"
 
-
-	res = cv2.filter2D(imagegray, -1, core)
-	res_0 = cv2.filter2D(imagegray, -1, core_0)
-	res_45 = cv2.filter2D(imagegray, -1, core_45)
-	res_90 = cv2.filter2D(imagegray, -1, core_90)
-	res_135 = cv2.filter2D(imagegray, -1, core_135)
-
-	cv2.imshow("conv", res)
-	cv2.imshow("0 conv", res_0)
-	cv2.imshow("45 conv", res_45)
-	cv2.imshow("90 conv", res_90)
-	cv2.imshow("135 conv", res_135)
-
-	print res_0.shape
-	print res_0
+	cv2.putText(image, "{}:{:.2f}".format(text, ratio), (10, 30),
+				cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 3)
+	cv2.imshow("image", image)
 	cv2.waitKey(0)
 if __name__ == "__main__":
-	image = cv2.imread("images\\lena.jpg")
+	image = cv2.imread("images\\salt4.jpg")
 	#detect_blur(image)
 	#detect_light_dark(image)
 	#detect_color_cast(image)
