@@ -8,7 +8,6 @@ import cv2
 import math
 from matplotlib import pyplot as plt
 import util
-import numpy as np
 
 # def variance_of_laplacian(image):
 # 	# compute the Laplacian of the image and then return the focus
@@ -131,12 +130,66 @@ def detect_snow(image):
 				cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 3)
 	cv2.imshow("image", image)
 	cv2.waitKey(0)
+
+def detect_noise(image):
+	howmany = 0
+	count = 0
+	L1 = 0
+	L2 = 0
+	image_gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+	image_height = image.shape[0]
+	image_width = image.shape[1]
+	i = 1
+	j = 1
+	while i < image_height - 1:
+		j = 1
+		while j < image_width - 3:
+
+			dataA = image_gray[i][j]
+			dataB = image_gray[i][j + 2]
+			if((i * j) % 1000 == 0):
+				print str(int(dataA)) + " " + str(int(dataB))
+				print math.fabs(int(dataA) - int(dataB))
+				print "================================"
+				howmany = howmany + 1
+				#ath.fabs(int(dataA-dataB))
+			if math.fabs(int(dataA)-int(dataB)) > 10:
+
+				for k in range(-1, 2):
+					for t in range(-1, 2):
+						tempA = math.fabs(int(image_gray[i+k][j+t]) - int(dataA))
+						tempB = math.fabs(int(image_gray[i+k][j+2+t])- int(dataB))
+						L1 = L1 + tempA
+						L2 = L2 + tempB
+
+				if (L1 > L2) and (L1 > 10):
+					count = count + 1
+					if j < image_width -3:
+						j = j + 3
+				elif (L1 <= L2) and (L2 > 10):
+					count = count + 1
+					if( j < image_width -3):
+						j = j + 3
+			j = j + 1
+			L1 = 0
+			L2 = 0
+		i = i + 1
+
+
+	print howmany
+	ratio = count*1.0 / (image_width * image_height)
+	print ratio
+
+
+
+
+
 if __name__ == "__main__":
-	image = cv2.imread("images\\salt4.jpg")
+	image = cv2.imread("images\\guobo.jpg")
 	#detect_blur(image)
 	#detect_light_dark(image)
 	#detect_color_cast(image)
 	#detect_no_signal(image)
-	detect_snow(image)
+	#detect_snow(image)
+	detect_noise(image)
 	#util.plot_rgb(image)
-

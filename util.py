@@ -100,7 +100,10 @@ def get_entropy_hist(image):
 # cv2.imshow("135 conv", res_135)
 if __name__ == '__main__':
 
-    image = cv2.imread("images\\nosignal.png")
-    entropy = get_entropy_hist(image)
-    print entropy
+    # image = cv2.imread("images\\nosignal.png")
+    # entropy = get_entropy_hist(image)
+    # print entropy
+    for i in range(1,100):
+        i = i + 3
+        print i
 
